@@ -3,10 +3,22 @@ import TaskCard from "./TaskCard";
 
 export default function TaskColumn({ title, tasks, onMove, onSelect }) {
   return (
-    <div className={styles.columnHeader}>
-      <li className={styles.list}>
-        <TaskCard />
-      </li>
+    <div className={styles.column}>
+      <div className={styles.header}>
+        <h3 className={styles.title}>{title}</h3>
+        <div className={styles.count}>{tasks.length}</div>
+      </div>
+      {tasks.length === 0 ? (
+        <div className={styles.empty}>No tasks have been added yet.</div>
+      ) : (
+        <ul className={styles.list}>
+          {tasks.map((t) => (
+            <li key={t.id}>
+              <TaskCard task={t} onMove={onMove} onSelect={onSelect} />
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
