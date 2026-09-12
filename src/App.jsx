@@ -1,5 +1,7 @@
 import { useState } from "react";
 import AddTaskForm from "./components/AddTaskForm";
+import TaskColumn from "./components/TaskColumn";
+import TaskDetail from "./components/TaskDetail";
 import "./App.css";
 
 const initialTasks = [
@@ -44,8 +46,9 @@ function App() {
   const [tasks, setTasks] = useState(initialTasks);
   const [selectedTask, setSelectedTask] = useState(null);
 
-  const handleAddTask = (t) => {
-    console.log(t);
+  const handleAddTask = (newTask) => {
+    setTasks((prev) => [...prev, newTask]);
+    console.log(newTask);
   };
 
   const handleMoveTask = (taskId) => {
@@ -53,24 +56,53 @@ function App() {
       todo: "inprogress",
       inprogress: "done",
     };
-    setTasks(
-      tasks.map((t) =>
+    setTasks((prev) =>
+      prev.map((t) =>
         t.id === taskId ? { ...t, status: nextStatus[t.status] } : t,
       ),
     );
   };
-  // const handleSelectTask = { (t) =>
 
-  // };
+  const handleSelectTask = (task) => {
+    setSelectedTask(task);
+  };
 
   const todoTasks = tasks.filter((t) => t.status === "todo");
   const inProgressTasks = tasks.filter((t) => t.status === "inprogress");
   const doneTasks = tasks.filter((t) => t.status === "done");
 
   return (
-    <>
+    <div className="app">
+      <div className="app-title">
+        <h3>Task Board</h3>
+      </div>
       <AddTaskForm onAdd={handleAddTask}></AddTaskForm>
-    </>
+      <div className="board-layout">
+        <div className="board">
+          <TaskColumn
+            title="To Do Tasks"
+            tasks={todoTasks}
+            onMove={handleMoveTask}
+            onSelect={handleSelectTask}
+          />
+          <TaskColumn
+            title="In Progress Tasks"
+            tasks={inProgressTasks}
+            onMove={handleMoveTask}
+            onSelect={handleSelectTask}
+          />
+          <TaskColumn
+            title="Done Tasks"
+            tasks={doneTasks}
+            onMove={handleMoveTask}
+            onSelect={handleSelectTask}
+          />
+        </div>
+        <div className="aside">
+          <TaskDetail task={selectedTask} />
+        </div>
+      </div>
+    </div>
   );
 }
 
