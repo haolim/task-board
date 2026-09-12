@@ -37,7 +37,7 @@
   border-left-color: var(--low);
 }
 
-/* Priority spine — apply alongside .card, e.g.
+/* Priority — apply alongside .card, e.g.
    className={`${styles.card} ${styles[task.priority]}`} */
 
 .low {
