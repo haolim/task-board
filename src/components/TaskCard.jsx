@@ -6,7 +6,7 @@ const priorityStyle = {
   medium: styles.badgeMedium,
 };
 
-export default function TaskCard({ task, onMove, onSelect }) {
+export default function TaskCard({ task, onMove, onSelect, onDelete }) {
   return (
     <div
       className={`${styles.card} ${styles[task.priority]}`}
@@ -30,6 +30,20 @@ export default function TaskCard({ task, onMove, onSelect }) {
               Move →
             </button>
           )}
+          <button
+            className={styles.delete}
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (
+                window.confirm("Are you sure you want to delete this task?")
+              ) {
+                onDelete(task.id);
+              }
+            }}
+          >
+            Delete
+          </button>
         </div>
       </div>
     </div>
