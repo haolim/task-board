@@ -2,6 +2,7 @@ import { useState } from "react";
 import AddTaskForm from "./components/AddTaskForm";
 import TaskColumn from "./components/TaskColumn";
 import TaskDetail from "./components/TaskDetail";
+import SearchBar from "./components/SearchBar";
 import "./App.css";
 
 const initialTasks = [
@@ -45,6 +46,7 @@ const initialTasks = [
 function App() {
   const [tasks, setTasks] = useState(initialTasks);
   const [selectedTask, setSelectedTask] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleAddTask = (newTask) => {
     setTasks((prev) => [...prev, newTask]);
@@ -67,15 +69,31 @@ function App() {
     setSelectedTask((prev) => (prev?.id === task.id ? null : task));
   };
 
-  const todoTasks = tasks.filter((t) => t.status === "todo");
-  const inProgressTasks = tasks.filter((t) => t.status === "inprogress");
-  const doneTasks = tasks.filter((t) => t.status === "done");
+  const handleDeleteTask = (taskId) => {
+    setTasks(tasks.filter((t) => t.id !== taskId));
+    if (selectedTask?.id === taskId) {
+      setSelectedTask(null);
+    }
+  };
+
+  const filteredTasks = tasks.filter((t) =>
+    t.title.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
+  const isFiltering = searchTerm.length > 0;
+
+  const todoTasks = filteredTasks.filter((t) => t.status === "todo");
+  const inProgressTasks = filteredTasks.filter(
+    (t) => t.status === "inprogress",
+  );
+  const doneTasks = filteredTasks.filter((t) => t.status === "done");
 
   return (
     <div className="app">
       <div className="app-title">
         <h3>Task Board</h3>
       </div>
+      <SearchBar searchTerm={searchTerm} onSearch={setSearchTerm} />
       <AddTaskForm onAdd={handleAddTask}></AddTaskForm>
       <div className="board-layout">
         <div className="board">
@@ -84,18 +102,24 @@ function App() {
             tasks={todoTasks}
             onMove={handleMoveTask}
             onSelect={handleSelectTask}
+            onDelete={handleDeleteTask}
+            isFiltering={isFiltering}
           />
           <TaskColumn
             title="In Progress Tasks"
             tasks={inProgressTasks}
             onMove={handleMoveTask}
             onSelect={handleSelectTask}
+            onDelete={handleDeleteTask}
+            isFiltering={isFiltering}
           />
           <TaskColumn
             title="Done Tasks"
             tasks={doneTasks}
             onMove={handleMoveTask}
             onSelect={handleSelectTask}
+            onDelete={handleDeleteTask}
+            isFiltering={isFiltering}
           />
         </div>
         <div className="aside">
