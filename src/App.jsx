@@ -64,7 +64,7 @@ function App() {
   };
 
   const handleSelectTask = (task) => {
-    setSelectedTask(task);
+    setSelectedTask((prev) => (prev?.id === task.id ? null : task));
   };
 
   const todoTasks = tasks.filter((t) => t.status === "todo");
