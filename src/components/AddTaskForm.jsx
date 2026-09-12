@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./AddTaskForm.module.css";
 
-const generateTaskId = () => "c" + Date.now();
+const generateTaskId = () => crypto.randomUUID;
 const emptyForm = {
   title: "",
   description: "",
@@ -21,62 +21,92 @@ export default function AddTaskForm({ onAdd }) {
     e.preventDefault();
     onAdd({
       id: generateTaskId(),
+      title: form.title,
       description: form.description,
-      priorirty: form.priority,
+      priority: form.priority,
       status: form.status,
     });
 
     setForm(emptyForm);
+    setShowAddForm(false);
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.fields}>
-          <div className={`${styles.field} ${styles.fullWidth}`}>
-            <label className={styles.label} htmlFor="title">
-              Title
-            </label>
-            <input
-              className={styles.input}
-              id="title"
-              name="title"
-              type="text"
-              value={form.title}
-              onChange={handleChange}
-              required
-            />
+      {!showAddForm && (
+        <button
+          type="button"
+          className={styles.submit}
+          onClick={() => setShowAddForm(true)}
+        >
+          Add Task
+        </button>
+      )}
+      {showAddForm && (
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.grid}>
+            <div className={`${styles.field} ${styles.fieldWide}`}>
+              <label className={styles.label} htmlFor="title">
+                Title
+              </label>
+              <input
+                className={styles.input}
+                id="title"
+                name="title"
+                type="text"
+                value={form.title}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="description">
+                Description
+              </label>
+              <textarea
+                className={styles.textarea}
+                id="description"
+                name="description"
+                value={form.description}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="priority">
+                Priority
+              </label>
+              <select
+                className={styles.select}
+                id="priority"
+                name="priority"
+                value={form.priority}
+                onChange={handleChange}
+                required
+              >
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
           </div>
-          <label className={styles.label} htmlFor="description">
-            Description
-          </label>
-          <input
-            className={styles.input}
-            id="description"
-            name="description"
-            type="text"
-            value={form.description}
-            onChange={handleChange}
-            required
-          />
-
-          <label className={styles.label} htmlFor="priority">
-            Priority
-          </label>
-          <select
-            className={styles.input}
-            id="priority"
-            name="priority"
-            value={form.priority}
-            onChange={handleChange}
-            required
-          >
-            <option value="low">Low</option>"
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-          </select>
-        </div>
-      </form>
+          <div className={styles.actions}>
+            <button type="submit" className={styles.submit}>
+              Add Task
+            </button>
+            <button
+              type="button"
+              className={styles.cancel}
+              onClick={() => {
+                setShowAddForm(false);
+                setForm(emptyForm);
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      )}
     </>
   );
 }
