@@ -42,32 +42,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* --- Stage marker ------------------------------------------------------- */
-
-.marker {
-  width: 10px;
-  height: 10px;
-  flex: none;
-  border: 1.5px solid var(--ink);
-  border-radius: 2px;
-}
-
-.markerTodo {
-  background-color: transparent;
-}
-
-.markerProgress {
-  background-image: linear-gradient(
-    to right,
-    var(--ink) 0 50%,
-    transparent 50% 100%
-  );
-}
-
-.markerDone {
-  background-color: var(--ink);
-}
-
 /* --- List --------------------------------------------------------------- */
 
 .list {
